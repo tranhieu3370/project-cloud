@@ -1,0 +1,64 @@
+// Khởi tạo data mark
+
+--Bảng tính tổng số ca trong từng năm tong_so_ca
+CREATE TABLE tong_so_ca 
+AS(SELECT thoi_gian,sum(tong_so) 
+AS tong_so_ca 
+FROM covid_19 
+GROUP BY thoi_gian);
+
+--Số ca dương tính của Trung Quốc
+CREATE TABLE so_lieu_tau 
+AS(SELECT Country, sum(tong_so) 
+AS tong_so_ca 
+FROM covid_19 
+WHERE Country='China' 
+GROUP BY Country);
+
+--Tổng số ca dương tính theo tên nước
+CREATE TABLE tong_so_ca_theo_quoc_gia 
+AS(SELECT Country, sum(tong_so) 
+AS tong_so_Ca FROM covid_19 
+GROUP BY Country);
+
+
+--Tổng số ca dương tính năm 2015 của các nước
+SELECT Country,Sum(so_luong)  
+FROM covid_19 
+WHERE thoi_gian 
+LIKE '%2015%' GROUP BY Country;
+
+--Thống kê số ca theo năm
+CREATE TABLE so_ca_theo_nam_duong_lich 
+AS(SELECT thoi_gian, Sum(tong_so) 
+FROM covid_19 
+GROUP BY thoi_gian);
+
+--Thống kê số ca theo tháng của 1 năm
+CREATE TABLE so_ca_theo_thang_trong_mot_nam 
+AS(SELECT Count(Country), Sum(so_ca)  
+FROM covid_19 
+WHERE Date_time LIKE '%09/2015%' 
+GROUP BY Country);
+
+--Thống kê số ca từng năm của từng nước
+CREATE TABLE tong_so_ca_theo_tung_nam_o_cac_nuoc 
+AS(SELECT Country,thoi_gian, Sum(tong_so) 
+AS tong_so_ca 
+FROM covid_19  
+GROUP BY Country, thoi_gian);
+
+
+///CÂU TRUY VẤN
+--Nước có số ca nhiễm lớn nhất theo năm cần tìm
+SELECT Country,MAX(tong_so_ca) 
+FROM tong_so_ca_theo_tung_nam_o_cac_nuoc 
+WHERE Country='Japan' 
+AND thoi_gian='2015' 
+GROUP BY Country;
+
+SELECT Country,MAX(tong_so_ca) 
+FROM tong_so_ca_theo_tung_nam_o_cac_nuoc 
+WHERE thoi_gian='2015' 
+GROUP BY Country;
+
